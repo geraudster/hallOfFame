@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <vaadin.version>7.0.0</vaadin.version>
+        <vaadin.version>7.3.1</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
     </properties>
     <repositories>
@@ -62,6 +62,11 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-themes</artifactId>
             <version>${vaadin.version}</version>
+        </dependency>
+          	<dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-cdi</artifactId>
+            <version>1.0.0.rc1</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

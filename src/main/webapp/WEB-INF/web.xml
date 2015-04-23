@@ -9,6 +9,7 @@
         <param-name>productionMode</param-name>
         <param-value>true</param-value>
     </context-param>
+  <!--
     <servlet>
         <servlet-name>Vaadin</servlet-name>
         <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
@@ -22,4 +23,5 @@
         <servlet-name>Vaadin</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
+-->
 </web-app>

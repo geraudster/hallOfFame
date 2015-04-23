@@ -3,32 +3,41 @@ package fr.gddb.halloffame.ui;
 import javax.inject.Inject;
 
 import com.vaadin.annotations.Title;
+import com.vaadin.cdi.CDIUI;
+import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Upload;
 import fr.gddb.halloffame.model.Rank;
 import fr.gddb.halloffame.service.HallOfFameService;
 import fr.gddb.halloffame.service.SubmissionService;
 
+@CDIUI("")
 @Title("Hall of Fame")
 public class HallOfFameUI extends UI {
-    private Table             scoreBoard = new Table();
-    private IndexedContainer  datasource = initDataSource();
-    private FormLayout        formLayout = new FormLayout();
+    private Table             scoreBoard   = new Table();
+    private IndexedContainer  datasource;
+    private FormLayout        formLayout   = new FormLayout();
+    private FieldGroup        editorFields = new FieldGroup();
 
     @Inject
     private HallOfFameService hallOfFameService;
 
     @Inject
     private SubmissionService submissionService;
+    private String[]          fieldNames   = new String[]{"UUID",};
 
     @Override
     protected void init(VaadinRequest req) {
         // TODO Auto-generated method stub
+        datasource = initDataSource();
         initLayout();
+        initForm();
         initScoreBoard();
     }
 
@@ -54,6 +63,20 @@ public class HallOfFameUI extends UI {
         setContent(splitPanel);
         splitPanel.addComponent(scoreBoard);
         splitPanel.addComponent(formLayout);
+    }
+
+    private void initForm() {
+        TextField field = new TextField("UUID");
+        formLayout.addComponent(field);
+        field.setWidth("100%");
+        editorFields.bind(field, "UUID");
+        SubmissionUploader receiver = new SubmissionUploader();
+        Upload upload = new Upload("Upload submission", receiver);
+        upload.setButtonCaption("Start upload");
+        upload.addSucceededListener(receiver);
+        formLayout.addComponent(upload);
+
+        editorFields.setBuffered(false);
     }
 
     private void initScoreBoard() {

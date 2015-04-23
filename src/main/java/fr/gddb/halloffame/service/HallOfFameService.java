@@ -5,11 +5,13 @@ import org.joda.time.DateTime;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import fr.gddb.halloffame.model.Rank;
 import fr.gddb.halloffame.model.Ranks;
 import fr.gddb.halloffame.model.User;
 
+@Named
 public class HallOfFameService {
   
   @Inject
