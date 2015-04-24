@@ -28,4 +28,5 @@ public class SubmissionService {
     previousRank.score = submission.evaluateScore();
     Collections.sort(ranks);
   }
+  
 }

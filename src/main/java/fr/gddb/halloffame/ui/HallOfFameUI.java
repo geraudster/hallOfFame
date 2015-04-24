@@ -1,44 +1,70 @@
 package fr.gddb.halloffame.ui;
 
+import java.util.UUID;
+
 import javax.inject.Inject;
 
 import com.vaadin.annotations.Title;
 import com.vaadin.cdi.CDIUI;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Form;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
+import com.vaadin.ui.VerticalSplitPanel;
 import fr.gddb.halloffame.model.Rank;
+import fr.gddb.halloffame.model.Submission;
+import fr.gddb.halloffame.model.User;
 import fr.gddb.halloffame.service.HallOfFameService;
 import fr.gddb.halloffame.service.SubmissionService;
 
 @CDIUI("")
 @Title("Hall of Fame")
 public class HallOfFameUI extends UI {
-    private Table             scoreBoard   = new Table();
+    private Table             scoreBoard          = new Table();
+    private Table             previousSubmissions = new Table();
     private IndexedContainer  datasource;
-    private FormLayout        formLayout   = new FormLayout();
-    private FieldGroup        editorFields = new FieldGroup();
+    private IndexedContainer  submissionsDatasource;
+    private FormLayout        formLayout          = new FormLayout();
+    private BeanFieldGroup<Submission>        editorFields        = new BeanFieldGroup<>(Submission.class);
 
     @Inject
     private HallOfFameService hallOfFameService;
 
     @Inject
     private SubmissionService submissionService;
-    private String[]          fieldNames   = new String[]{"UUID",};
+    private String[]          fieldNames          = new String[]{"UUID",};
 
     @Override
     protected void init(VaadinRequest req) {
         // TODO Auto-generated method stub
         datasource = initDataSource();
+        submissionsDatasource = initSubmissionsDataSource();
         initLayout();
         initForm();
         initScoreBoard();
+        initPreviousSubmissions();
+    }
+
+    /**
+     * 
+     */
+    private void initPreviousSubmissions() {
+        previousSubmissions.setContainerDataSource(submissionsDatasource);
+        previousSubmissions.setVisibleColumns(new String[]{"Date", "Comment"});
+        previousSubmissions.setSelectable(true);
+        previousSubmissions.setImmediate(true);
     }
 
     /**
@@ -58,24 +84,67 @@ public class HallOfFameUI extends UI {
         return ic;
     }
 
+    private IndexedContainer initSubmissionsDataSource() {
+        IndexedContainer ic = new IndexedContainer();
+
+        ic.addContainerProperty("Date", String.class, "");
+        ic.addContainerProperty("Comment", Integer.class, 0);
+
+        User u = new User();
+        u.uuid = UUID.fromString("f3a5431e-ea89-11e4-954f-34e6d7071067");
+
+        for (Submission submission : submissionService.submissions.findByUser(u)) {
+            Object id = ic.addItem();
+            ic.getContainerProperty(id, "Date").setValue(submission.submissionDate);
+            ic.getContainerProperty(id, "Comment").setValue(submission.comment);
+        }
+        return ic;
+
+    }
+
     private void initLayout() {
-        HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
+        VerticalSplitPanel vSplitPanel = new VerticalSplitPanel();
+
+        HorizontalLayout splitPanel = new HorizontalLayout();
+        vSplitPanel.addComponent(splitPanel);
         setContent(splitPanel);
         splitPanel.addComponent(scoreBoard);
+        splitPanel.addComponent(previousSubmissions);
         splitPanel.addComponent(formLayout);
     }
 
     private void initForm() {
-        TextField field = new TextField("UUID");
+/*        TextField field = new TextField("UUID");
         formLayout.addComponent(field);
         field.setWidth("100%");
         editorFields.bind(field, "UUID");
+        field = new TextField("Comment");
+        formLayout.addComponent(field);
+        field.setWidth("100%");
+        editorFields.bind(field, "Comment");
+*/
+      Submission submission = new Submission();
+      BeanItem<Submission> submissionBean = new BeanItem<>(submission);
+		editorFields.setItemDataSource(submissionBean);
+
+      //formLayout.addComponent(editorFields.buildAndBind("UUID", "uuid"));
+            formLayout.addComponent(editorFields.buildAndBind("Comment", "comment"));
         SubmissionUploader receiver = new SubmissionUploader();
         Upload upload = new Upload("Upload submission", receiver);
-        upload.setButtonCaption("Start upload");
+        //upload.setButtonCaption("Start upload");
         upload.addSucceededListener(receiver);
         formLayout.addComponent(upload);
 
+        Button submitButton = new Button();
+        submitButton.addClickListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                Submission submission = new Submission();
+                User u = new User();
+                //u.uuid = 
+                //submissionService.submit(submission)
+                Notification.show("Submission added");
+            }
+        });
         editorFields.setBuffered(false);
     }
 
