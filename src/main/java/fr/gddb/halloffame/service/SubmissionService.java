@@ -17,15 +17,15 @@ public class SubmissionService {
   public void submit(Submission submission) {
     submissions.add(submission);
     
-    Rank previousRank = ranks.findByUser(submission.user);
+    Rank previousRank = ranks.findByUser(submission.getUser());
     if(previousRank != null) {
-      previousRank.previousRank = previousRank.score;
+      previousRank.setPreviousRank(previousRank.getScore());
     } else {
       previousRank = new Rank();
-      previousRank.user = submission.user;
+      previousRank.setUser(submission.getUser());
       ranks.add(previousRank);
     }
-    previousRank.score = submission.evaluateScore();
+    previousRank.setScore(submission.evaluateScore());
     Collections.sort(ranks);
   }
   

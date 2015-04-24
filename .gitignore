@@ -1,1 +1,7 @@
 src/main/java/com/codenvy/example
+target
+*.iml
+.idea
+.classpath
+.project
+.settings

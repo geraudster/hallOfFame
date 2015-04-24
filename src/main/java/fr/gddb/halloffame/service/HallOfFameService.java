@@ -28,8 +28,8 @@ public class HallOfFameService {
       user.lastName = String.format("lastName_%02d", i);
       user.subscriptionDate = new DateTime();
       rank = new Rank();
-      rank.user = user;
-      rank.score = i;
+      rank.setUser(user);
+      rank.setScore(i);
       ranks.add(rank);
     }
     return ranks;

@@ -3,7 +3,6 @@ package fr.gddb.halloffame.service;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -30,8 +29,8 @@ public class SubmissionServiceTest {
     u1.subscriptionDate = new DateTime();
     
     Submission submission = new Submission();
-    submission.user = u1;
-    submission.payload = "payload";
+    submission.setUser(u1);
+    submission.setPayload("payload");
     Assert.assertEquals(7, submission.evaluateScore());
     
     submissionService.submit(submission);
@@ -48,8 +47,8 @@ public class SubmissionServiceTest {
     u.subscriptionDate = new DateTime();
     
     Rank rankUser = new Rank();
-    rankUser.user = u;
-    rankUser.score = 1;
+    rankUser.setUser(u);
+    rankUser.setScore(1);
     submissionService.ranks.add(rankUser);
     
     u = new User();
@@ -59,8 +58,8 @@ public class SubmissionServiceTest {
     u.subscriptionDate = new DateTime();
     
     rankUser = new Rank();
-    rankUser.user = u;
-    rankUser.score = 10;
+    rankUser.setUser(u);
+    rankUser.setScore(10);
     submissionService.ranks.add(rankUser);
     
     User u2 = new User();
@@ -70,8 +69,8 @@ public class SubmissionServiceTest {
     u2.subscriptionDate = new DateTime();
     
     Submission submission = new Submission();
-    submission.user = u2;
-    submission.payload = "payload";
+    submission.setUser(u2);
+    submission.setPayload("payload");
     
     submissionService.submit(submission);
     Assert.assertEquals("There should be 3 ranks", 3, submissionService.ranks.size());

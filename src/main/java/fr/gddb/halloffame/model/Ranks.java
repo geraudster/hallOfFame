@@ -11,7 +11,7 @@ public class Ranks extends ArrayList<Rank>{
   public int getUserRank(User user) {
     int pos = 0;
     for(Rank rank : this) {
-      if(rank.user.equals(user)) {
+      if(rank.getUser().equals(user)) {
         break;
       }
       pos++;

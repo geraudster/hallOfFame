@@ -7,19 +7,15 @@ import javax.inject.Inject;
 import com.vaadin.annotations.Title;
 import com.vaadin.cdi.CDIUI;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Form;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalSplitPanel;
@@ -78,8 +74,8 @@ public class HallOfFameUI extends UI {
 
         for (Rank rank : hallOfFameService.getRanks()) {
             Object id = ic.addItem();
-            ic.getContainerProperty(id, "User").setValue(rank.user.firstName);
-            ic.getContainerProperty(id, "Score").setValue(rank.score);
+            ic.getContainerProperty(id, "User").setValue(rank.getUser().firstName);
+            ic.getContainerProperty(id, "Score").setValue(rank.getScore());
         }
         return ic;
     }
@@ -95,8 +91,8 @@ public class HallOfFameUI extends UI {
 
         for (Submission submission : submissionService.submissions.findByUser(u)) {
             Object id = ic.addItem();
-            ic.getContainerProperty(id, "Date").setValue(submission.submissionDate);
-            ic.getContainerProperty(id, "Comment").setValue(submission.comment);
+            ic.getContainerProperty(id, "Date").setValue(submission.getSubmissionDate());
+            ic.getContainerProperty(id, "Comment").setValue(submission.getComment());
         }
         return ic;
 
