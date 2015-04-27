@@ -4,11 +4,11 @@ import org.joda.time.DateTime;
 
 public class Submission {
   private User user;
-  private String payload;
+  private String payload = "";
   public int evaluateScore() {
     return getPayload().length();
   }
-  private String comment;
+  private String comment = "";
   private DateTime submissionDate;
 
   public User getUser() {

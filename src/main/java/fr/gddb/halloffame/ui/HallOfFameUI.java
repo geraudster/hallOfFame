@@ -1,5 +1,7 @@
 package fr.gddb.halloffame.ui;
 
+import org.joda.time.DateTime;
+
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -83,8 +85,8 @@ public class HallOfFameUI extends UI {
     private IndexedContainer initSubmissionsDataSource() {
         IndexedContainer ic = new IndexedContainer();
 
-        ic.addContainerProperty("Date", String.class, "");
-        ic.addContainerProperty("Comment", Integer.class, 0);
+        ic.addContainerProperty("Date", DateTime.class, null);
+        ic.addContainerProperty("Comment", String.class, "<no comment>");
 
         User u = new User();
         u.uuid = UUID.fromString("f3a5431e-ea89-11e4-954f-34e6d7071067");
@@ -110,20 +112,10 @@ public class HallOfFameUI extends UI {
     }
 
     private void initForm() {
-/*        TextField field = new TextField("UUID");
-        formLayout.addComponent(field);
-        field.setWidth("100%");
-        editorFields.bind(field, "UUID");
-        field = new TextField("Comment");
-        formLayout.addComponent(field);
-        field.setWidth("100%");
-        editorFields.bind(field, "Comment");
-*/
-      Submission submission = new Submission();
+      final Submission submission = new Submission();
       BeanItem<Submission> submissionBean = new BeanItem<>(submission);
 		editorFields.setItemDataSource(submissionBean);
 
-      //formLayout.addComponent(editorFields.buildAndBind("UUID", "uuid"));
             formLayout.addComponent(editorFields.buildAndBind("Comment", "comment"));
         SubmissionUploader receiver = new SubmissionUploader();
         Upload upload = new Upload("Upload submission", receiver);
@@ -134,13 +126,18 @@ public class HallOfFameUI extends UI {
         Button submitButton = new Button();
         submitButton.addClickListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                Submission submission = new Submission();
                 User u = new User();
-                //u.uuid = 
-                //submissionService.submit(submission)
-                Notification.show("Submission added");
+                u.uuid = UUID.fromString("f3a5431e-ea89-11e4-954f-34e6d7071067");
+                submission.setUser(u);
+              	 submission.setSubmissionDate(new DateTime());
+                submissionService.submit(submission);
+             Object id = submissionsDatasource.addItem();
+                submissionsDatasource.getContainerProperty(id, "Date").setValue(submission.getSubmissionDate());
+                submissionsDatasource.getContainerProperty(id, "Comment").setValue(submission.getComment());
+                Notification.show(String.format("Submission added [%s]", submission.getComment()));
             }
         });
+        formLayout.addComponent(submitButton);
         editorFields.setBuffered(false);
     }
 
